@@ -1,11 +1,33 @@
 [Unit]
-Description=SSH IP Blocker
-After=network.target
+Description=SSH IP Blocker Service
+After=network.target firewalld.service
+Wants=firewalld.service
+Documentation=man:logger(1)
 
 [Service]
 Type=oneshot
-ExecStart=/usr/bin/ssh-ip-blocker
 User=root
+ExecStart=/usr/local/bin/ssh-ip-blocker.sh
+# Привилегии для работы с firewalld
+CapabilityBoundingSet=CAP_NET_ADMIN CAP_NET_RAW
+AmbientCapabilities=CAP_NET_ADMIN CAP_NET_RAW
+SecureBits=keep-caps
+# Защищенные директории
+ProtectSystem=strict
+ReadWritePaths=/etc/firewalld
+ReadOnlyPaths=/var/log/secure /etc/ssh-ip-blocker.conf
+# Безопасность
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectHome=true
+ProtectKernelTunables=true
+ProtectKernelModules=true
+ProtectControlGroups=true
+RestrictRealtime=true
+MemoryDenyWriteExecute=true
+LockPersonality=true
+RestrictNamespaces=true
+RestrictSUIDSGID=true
 
 [Install]
 WantedBy=multi-user.target
