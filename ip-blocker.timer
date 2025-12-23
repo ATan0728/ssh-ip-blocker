@@ -1,9 +1,12 @@
 [Unit]
 Description=Run SSH IP Blocker every 5 minutes
+Requires=ssh-ip-blocker.service
 
 [Timer]
-OnBootSec=5min
 OnUnitActiveSec=5min
+OnBootSec=5min
+Persistent=true
+Unit=ssh-ip-blocker.service
 
 [Install]
 WantedBy=timers.target
